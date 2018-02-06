@@ -23,16 +23,16 @@ public class InMemoryProductRepository implements ProductRepository {
         iphone.setUnitsInStock(1000);
 
         Product laptop_Dell = new Product("P1235", "Dell Inspiron", new BigDecimal(700));
-        iphone.setDescription("Dell Inspiron, 14-calowy laptop (czarny) z procesorem Intel Core 3. generacji");
-        iphone.setCategory("Lapton");
-        iphone.setManufacturer("Dell");
-        iphone.setUnitsInStock(1000);
+        laptop_Dell.setDescription("Dell Inspiron, 14-calowy laptop (czarny) z procesorem Intel Core 3. generacji");
+        laptop_Dell.setCategory("Lapton");
+        laptop_Dell.setManufacturer("Dell");
+        laptop_Dell.setUnitsInStock(1000);
 
         Product tablet_Nexus = new Product("P1236", "Nexus 7", new BigDecimal(300));
-        iphone.setDescription("Google Nexyus 7 je najlżejszym 7-calowym tabletem z 4-rdzeniowym procesorem Qualcom Snapdragon S4 Pro");
-        iphone.setCategory("Tables");
-        iphone.setManufacturer("Google");
-        iphone.setUnitsInStock(1000);
+        tablet_Nexus.setDescription("Google Nexyus 7 je najlżejszym 7-calowym tabletem z 4-rdzeniowym procesorem Qualcom Snapdragon S4 Pro");
+        tablet_Nexus.setCategory("Tablet");
+        tablet_Nexus.setManufacturer("Google");
+        tablet_Nexus.setUnitsInStock(1000);
 
         productList.add(iphone);
         productList.add(laptop_Dell);
@@ -60,5 +60,20 @@ public class InMemoryProductRepository implements ProductRepository {
         }
 
         return productById;
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(String category) {
+
+        List<Product> productsByCategory = new ArrayList<>();
+
+        productList.forEach((product) -> {
+            if (category.equalsIgnoreCase(product.getCategory())) {
+                productsByCategory.add(product);
+            }
+        });
+
+        return productsByCategory;
+
     }
 }
