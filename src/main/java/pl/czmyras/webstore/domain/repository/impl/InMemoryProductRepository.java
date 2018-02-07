@@ -5,8 +5,7 @@ import pl.czmyras.webstore.domain.Product;
 import pl.czmyras.webstore.domain.repository.ProductRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class InMemoryProductRepository implements ProductRepository {
@@ -24,12 +23,12 @@ public class InMemoryProductRepository implements ProductRepository {
 
         Product laptop_Dell = new Product("P1235", "Dell Inspiron", new BigDecimal(700));
         laptop_Dell.setDescription("Dell Inspiron, 14-calowy laptop (czarny) z procesorem Intel Core 3. generacji");
-        laptop_Dell.setCategory("Lapton");
+        laptop_Dell.setCategory("Laptop");
         laptop_Dell.setManufacturer("Dell");
         laptop_Dell.setUnitsInStock(1000);
 
         Product tablet_Nexus = new Product("P1236", "Nexus 7", new BigDecimal(300));
-        tablet_Nexus.setDescription("Google Nexyus 7 je najlżejszym 7-calowym tabletem z 4-rdzeniowym procesorem Qualcom Snapdragon S4 Pro");
+        tablet_Nexus.setDescription("Google Nexus 7 je najlżejszym 7-calowym tabletem z 4-rdzeniowym procesorem Qualcom Snapdragon S4 Pro");
         tablet_Nexus.setCategory("Tablet");
         tablet_Nexus.setManufacturer("Google");
         tablet_Nexus.setUnitsInStock(1000);
@@ -48,7 +47,7 @@ public class InMemoryProductRepository implements ProductRepository {
     public Product getProductById(String productId) {
         Product productById = null;
 
-        for (Product product: productList) {
+        for (Product product : productList) {
             if (product != null && product.getProductId() != null & product.getProductId().equals(productId)) {
                 productById = product;
                 break;
@@ -75,5 +74,34 @@ public class InMemoryProductRepository implements ProductRepository {
 
         return productsByCategory;
 
+    }
+
+    @Override
+    public Set<Product> getProductsByFilter(Map<String, List<String>> filtersParams) {
+        Set<Product> productsByBrand = new HashSet<>();
+        Set<Product> productsByCategory = new HashSet<>();
+        Set<String> criterias = filtersParams.keySet();
+
+        if (criterias.contains("brand")) {
+            for (String brandName : filtersParams.get("brand")) {
+                for (Product product : productList) {
+                    if (product.getManufacturer().equalsIgnoreCase(brandName)) {
+                        productsByBrand.add(product);
+                    }
+                }
+            }
+        }
+        if (criterias.contains("category")) {
+            for (String categoryName : filtersParams.get("category")) {
+                for (Product product : productList) {
+                    if (product.getCategory().equalsIgnoreCase(categoryName)) {
+                        productsByCategory.add(product);
+                    }
+                }
+            }
+        }
+
+        productsByBrand.retainAll(productsByCategory);
+        return productsByBrand;
     }
 }
